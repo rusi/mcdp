@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from contracts import contract
+from contracts.utils import raise_desc, indent
 import itertools
 from mcdp import logger
 from mcdp.exceptions import DPInternalError
@@ -7,7 +7,7 @@ from mcdp_library import MCDPLibrary
 from mcdp_report.gg_utils import embed_images_from_library2
 from mcdp_utils_xml import to_html_stripping_fragment, bs, describe_tag
 
-from contracts.utils import raise_desc, indent
+from contracts import contract
 
 from .check_missing_links import check_if_any_href_is_invalid, fix_subfig_references
 from .elements_abbrevs import other_abbrevs
@@ -28,8 +28,7 @@ __all__ = [
 @contract(returns='str', s=str, library=MCDPLibrary, raise_errors=bool)
 def render_complete(library, s, raise_errors, realpath, generate_pdf=False,
                     check_refs=False, use_mathjax=True, filter_soup=None,
-                    symbols=None,
-                    raise_missing_image_errors = True):
+                    symbols=None):
     """
         Transforms markdown into html and then renders the mcdp snippets inside.
         
@@ -39,6 +38,8 @@ def render_complete(library, s, raise_errors, realpath, generate_pdf=False,
         
         filter_soup(library, soup)
     """
+    raise_missing_image_errors = raise_errors
+    raise_missing_image_errors = False
     from .latex.latex_preprocess import extract_maths, extract_tabular
     from .latex.latex_preprocess import latex_preprocessing
     from .latex.latex_preprocess import replace_equations

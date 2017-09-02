@@ -391,12 +391,33 @@ p.special-par-see-also {
 // Requires
 
 
-p.special-par-requires::before {
-    content: 'Requires: ';
-    font-weight: bold;
+p.special-par-requires{
+    &::before  {
+        content: 'Requires: ';
+        font-weight: bold;
+        color: darkred;
+    }
+    border-left: solid 3px darkred;
+    padding-left: 0.5em;
 }
 
-p.special-par-requires {
+
+p.special-par-results {
+    &::before  {
+        content: 'Results: ';
+        font-weight: bold;
+        color: darkgreen;
+    }
+    border-left: solid 3px darkgreen;
+    padding-left: 0.5em;
+}
+
+
+p.special-par-next {
+    &::before  {
+        content: 'Next: ';
+        font-weight: bold;
+    }
     border-left: solid 3px black;
     padding-left: 0.5em;
 }
@@ -475,9 +496,24 @@ p.special-par-warning {
 }
 
 div.requirements {
-    border-left: solid 3px lightgrey;
-    padding-left: 0.5em;
+    border: solid 0.5px #6563ef;
+    padding: 0.5em;
+    margin-top: 2em;
+
+    // box-shadow: 3px 0px 10px 2px rgba(105,39,245,0.74);
 }
+
+div.requirements::before {
+    content: "Knowledge and activity graph";
+    color: darkblue;
+    font-variant: small-caps;
+    margin-top: -2em;
+    display: block;
+    height: 2em;
+    text-align: center;
+    font-stretch: expanded;
+}
+
 
 div.check::before {
     content: "Check before you continue";

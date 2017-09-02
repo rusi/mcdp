@@ -40,8 +40,7 @@ def get_split_test_document():
     realpath = 'internal'
     raise_errors = True
     rendered = render_complete(library, md, raise_errors, realpath, generate_pdf=False,
-                    check_refs=True, do_math=True, filter_soup=None,
-                    raise_missing_image_errors = False)
+                    check_refs=True, do_math=True, filter_soup=None)
     
     files_contents = [(('unused', 'unusued'), rendered)]
     bibfile = None

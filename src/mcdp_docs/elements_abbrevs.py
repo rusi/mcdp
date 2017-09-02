@@ -58,6 +58,11 @@ def substitute_special_paragraphs(soup):
         'See: ': 'special-par-see',
         'Reference: ': 'special-par-see',
         'Requires: ': 'special-par-requires',
+        'Results: ': 'special-par-results',
+        'Result: ': 'special-par-results',
+        'Next steps: ': 'special-par-next',
+        'Next Steps: ': 'special-par-next',
+        'Next: ': 'special-par-next',
         'Recommended: ': 'special-par-recommended',
         'See also: ': 'special-par-see-also',
         

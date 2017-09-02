@@ -12,7 +12,7 @@
 
 
 
-        Automatically created ---  do not modify
+        Automatically created ---  do not modify 
 
 
     -----------------
@@ -1226,13 +1226,31 @@ p.special-par-see-also {
   margin: 1em;
   font-style: italic;
 }
+p.special-par-requires {
+  border-left: solid 3px darkred;
+  padding-left: 0.5em;
+}
 p.special-par-requires::before {
   content: 'Requires: ';
   font-weight: bold;
+  color: darkred;
 }
-p.special-par-requires {
+p.special-par-results {
+  border-left: solid 3px darkgreen;
+  padding-left: 0.5em;
+}
+p.special-par-results::before {
+  content: 'Results: ';
+  font-weight: bold;
+  color: darkgreen;
+}
+p.special-par-next {
   border-left: solid 3px black;
   padding-left: 0.5em;
+}
+p.special-par-next::before {
+  content: 'Next: ';
+  font-weight: bold;
 }
 p.special-par-recommended::before {
   content: 'Recommended: ';
@@ -1285,8 +1303,19 @@ p.special-par-warning {
   padding-left: 0.5em;
 }
 div.requirements {
-  border-left: solid 3px lightgrey;
-  padding-left: 0.5em;
+  border: solid 0.5px #6563ef;
+  padding: 0.5em;
+  margin-top: 2em;
+}
+div.requirements::before {
+  content: "Knowledge and activity graph";
+  color: darkblue;
+  font-variant: small-caps;
+  margin-top: -2em;
+  display: block;
+  height: 2em;
+  text-align: center;
+  font-stretch: expanded;
 }
 div.check::before {
   content: "Check before you continue";
@@ -1823,7 +1852,7 @@ pre + p {
     display: block;
     width: 25em;
     left: 0;
-    top: 4em;
+    top: 0;
     position: absolute;
   }
   #tocdiv ul {
@@ -1912,7 +1941,7 @@ ul.toc ul:not(.contains-link-same-file) li:not(.link-same-file-inside) {
 
 
 
-        Automatically created ---  do not modify
+        Automatically created ---  do not modify 
 
 
     -----------------

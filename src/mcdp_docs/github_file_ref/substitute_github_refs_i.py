@@ -149,11 +149,12 @@ def checkout_repository(tmpdir, org, repo, branch):
             m = os.path.getmtime(path)
             age = time.time() - m
             if age < 10*60:
-                msg = 'Do not checkout repo if young.'
-                logger.debug(msg)
+                pass
+#                 msg = 'Do not checkout repo if young.'
+#                 logger.debug(msg)
             else:
-                msg = 'Checkout repo of  age %s.' % age
-                logger.debug(msg)
+#                 msg = 'Checkout repo of  age %s.' % age
+#                 logger.debug(msg)
                 repo = Repo(path)
                 try:
                     repo.remotes.origin.pull()
