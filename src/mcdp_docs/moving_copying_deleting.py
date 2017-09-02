@@ -1,7 +1,7 @@
+from mcdp_utils_xml.note_errors_inline import note_error2
 
 
-def move_things_around(soup):
-    
+def move_things_around(soup, raise_if_errors=False): 
     '''
         Looks for tags like:
         
@@ -20,8 +20,14 @@ def move_things_around(soup):
         nid = src[1:]
         el = soup.find(id=nid)
         if not el:
-            msg = 'Could not find ID %r.' % nid
-            raise ValueError(msg)
+            msg = 'move-here: Could not find ID %r.' % nid
+            e.name = 'span'
+            note_error2(e, "invalid move-here reference", msg)
+            
+            if raise_if_errors:
+                raise ValueError(msg)
+            else:
+                continue
         el.extract()
         e.replace_with(el)
         

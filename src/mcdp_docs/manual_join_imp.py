@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 from collections import OrderedDict
+from contracts.utils import raise_desc, indent
 import json
+from mcdp.logs import logger
+from mcdp_docs.moving_copying_deleting import move_things_around
+from mcdp_utils_xml import add_class, bs
 import sys
 
 from bs4 import BeautifulSoup
 from bs4.element import Comment, Tag, NavigableString
-
 from contracts import contract
-from contracts.utils import raise_desc, indent
-from mcdp.logs import logger
-from mcdp_docs.moving_copying_deleting import move_things_around
-from mcdp_utils_xml import add_class
-from mcdp_utils_xml import bs
 
 from .footnote_javascript import add_footnote_polyfill
 from .macros import replace_macros
@@ -35,8 +33,7 @@ def get_manual_css_frag():
         link = Tag(name='link')
         link['rel'] = 'stylesheet'
         link['type'] = 'text/css'
-        link['href'] = 'VERSIONCSS'
-#         frag.append(link)
+        link['href'] = 'VERSIONCSS' 
 
         return frag
     else:
@@ -48,7 +45,8 @@ def get_manual_css_frag():
 def manual_join(template, files_contents, 
                 stylesheet, remove=None, extra_css=None,
                 remove_selectors=None,
-                hook_before_toc=None):
+                hook_before_toc=None,
+                references={}):
     """
         extra_css: if not None, a string of more CSS to be added
         Remove_selectors: list of selectors to remove (e.g. ".draft").
@@ -124,13 +122,10 @@ def manual_join(template, files_contents,
 
     do_bib(d, bibhere)
 
-
     document_final_pass_before_toc(d, remove, remove_selectors)
     
-    
     if hook_before_toc is not None:
-        hook_before_toc(soup=d)
-    ###
+        hook_before_toc(soup=d) 
     
     generate_and_add_toc(d)
 
@@ -142,6 +137,16 @@ def manual_join(template, files_contents,
 
     document_only_once(d)
 
+    for a in d.select('[href]'):
+        href = a.attrs['href']
+#         if href.startswith('#'):
+#             id_ = href[1:]
+        if href in references:
+            r = references[href]
+            a.attrs['href'] = r.url
+            if not a.children: # empty
+                a.append(r.title)
+
     logger.info('converting to string')
     # do not use to_html_stripping_fragment - this is a complete doc
     res = unicode(d)
@@ -150,7 +155,6 @@ def manual_join(template, files_contents,
     return res
 
 def document_final_pass_before_toc(soup, remove, remove_selectors):
-    
     logger.info('reorganizing contents in <sections>')
     body = soup.find('body')
     if body is None:
@@ -158,7 +162,6 @@ def document_final_pass_before_toc(soup, remove, remove_selectors):
         raise ValueError(msg)
     body2 = reorganize_contents(body)
     body.replace_with(body2)
-
 
     # Removing stuff
     do_remove_stuff(body2, remove_selectors, remove)

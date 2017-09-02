@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 from compmake.utils.friendly_path_imp import friendly_path
-from contracts import contract
-import getpass
+from contracts.utils import raise_wrapped
 import logging
 from mcdp import logger
+from mcdp.constants import MCDPConstants
 from mcdp.exceptions import DPSyntaxError
 from mcdp_docs.check_bad_input_files import check_bad_input_file_presence
+from mcdp_docs.html_links import read_references
 from mcdp_library import MCDPLibrary
 from mcdp_library.stdlib import get_test_librarian
 from mcdp_utils_misc import expand_all
@@ -13,7 +15,7 @@ from mcdp_utils_misc import locate_files, get_md5
 import os
 import tempfile
 
-from contracts.utils import raise_wrapped
+from contracts import contract
 from quickapp import QuickApp
 from reprep.utils import natsorted
 
@@ -22,7 +24,6 @@ from .manual_constants import MCDPManualConstants
 from .manual_join_imp import manual_join
 from .minimal_doc import get_minimal_document
 from .read_bibtex import run_bibtex2html
-from mcdp.constants import MCDPConstants
 
 
 class RenderManual(QuickApp):
@@ -31,6 +32,9 @@ class RenderManual(QuickApp):
     def define_options(self, params):
         params.add_string('src', help="""
         Directories with all contents; separate multiple entries with a colon.""")
+        
+        params.add_string('extra', default="")
+        
         params.add_string('output_file', help='Output file')
         params.add_string('stylesheet', help='Stylesheet', default=None)
         params.add_int('mathjax', help='Use MathJax (requires node)', default=1)
@@ -46,6 +50,8 @@ class RenderManual(QuickApp):
         options = self.get_options()
         src = options.src
         src_dirs = [_ for _ in src.split(":") if _ and _.strip()]
+        
+        html_dirs = [_ for _ in options.extra.split(":") if _ and _.strip()]
         
 #         src_dirs = [expand_all(_) for _ in src_dirs]
         
@@ -72,9 +78,11 @@ class RenderManual(QuickApp):
             check_bad_input_file_presence(s)
             
         manual_jobs(context, 
-                    src_dirs=src_dirs, 
+                    src_dirs=src_dirs,
+                    extra_dirs=html_dirs, 
                     output_file=output_file,
                     generate_pdf=generate_pdf,
+                    
                     bibfile=bibfile,
                     stylesheet=stylesheet,
                     remove=remove,
@@ -132,7 +140,7 @@ def look_for_files(srcdirs, pattern):
 
 @contract(src_dirs='seq(str)')
 def manual_jobs(context, src_dirs, output_file, generate_pdf, bibfile, stylesheet,
-                use_mathjax,
+                use_mathjax, extra_dirs=[],
                 remove=None, filter_soup=None, extra_css=None, symbols=None):
     """
         src_dirs: list of sources
@@ -188,16 +196,31 @@ def manual_jobs(context, src_dirs, output_file, generate_pdf, bibfile, styleshee
         files_contents.append(entry)
     
     template = get_main_template(root_dir)
+    
+    
+    references = OrderedDict()
+#     base_url = 'http://book.duckietown.org/master/duckiebook/pdoc'
+#     for extra_dir in extra_dirs:
+#         res = read_references(extra_dir, base_url, prefix='python:')
+#         references.update(res)
+        
+#     extra = look_for_files(extra_dirs, "*.html")
+#     
+#     for filename in extra:
+#         contents = open(filename).read()
+#         docname = os.path.basename(filename) + '_' + get_md5(filename)[:5]
+#         c = (('unused', docname), contents)
+#         files_contents.append(c)
    
     d = context.comp(manual_join, template=template, files_contents=files_contents, 
-                     stylesheet=stylesheet, remove=remove)
+                     stylesheet=stylesheet, remove=remove, references=references)
     
     context.comp(write, d, output_file)
 
     if os.path.exists(MCDPManualConstants.pdf_metadata_template):
         context.comp(generate_metadata, root_dir)
 
-
+    
 
 def is_ignored_by_catkin(dn):
     """ Returns true if the directory is inside one with CATKIN_IGNORE """
