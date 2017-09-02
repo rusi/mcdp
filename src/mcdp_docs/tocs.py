@@ -146,23 +146,24 @@ def generate_toc(soup, max_depth=None):
 
     logger.debug('numbering items')
     number_items2(root)
-    logger.debug(toc_summary(root))
-
-    logger.debug('toc iterating')
-    # iterate over chapters (below each h1)
-    # XXX: this is parts
     if False:
-        for item in root.items:
-            s = item.to_html(root=True, max_levels=100)
-            stoc = bs(s)
-            if stoc.ul is not None:  # empty document case
-                ul = stoc.ul
-                ul.extract()
-                ul['class'] = 'toc chapter_toc'
-                # todo: add specific h1
-                item.tag.insert_after(ul)  # XXX: uses <fragment>
-
-    logger.debug('toc done iterating')
+        logger.debug(toc_summary(root))
+# 
+#     logger.debug('toc iterating')
+#     # iterate over chapters (below each h1)
+#     # XXX: this is parts
+#     if False:
+#         for item in root.items:
+#             s = item.to_html(root=True, max_levels=100)
+#             stoc = bs(s)
+#             if stoc.ul is not None:  # empty document case
+#                 ul = stoc.ul
+#                 ul.extract()
+#                 ul['class'] = 'toc chapter_toc'
+#                 # todo: add specific h1
+#                 item.tag.insert_after(ul)  # XXX: uses <fragment>
+# 
+#     logger.debug('toc done iterating')
     exclude = ['subsub', 'fig', 'code', 'tab', 'par', 'subfig',
                 'appsubsub',
                         'def', 'eq', 'rem', 'lem', 'prob', 'prop', 'exa', 'thm' ]

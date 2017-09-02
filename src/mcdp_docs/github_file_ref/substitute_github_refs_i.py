@@ -41,7 +41,7 @@ def substitute_github_ref(a, defaults):
     
 
     ref = resolve_reference(ref, defaults)
-    logger.debug(ref.url)
+#     logger.debug(ref.url)
     a.attrs['href'] = ref.url
     
     if not list(a.children):

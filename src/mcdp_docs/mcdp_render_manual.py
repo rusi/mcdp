@@ -7,11 +7,9 @@ from mcdp import logger
 from mcdp.constants import MCDPConstants
 from mcdp.exceptions import DPSyntaxError
 from mcdp_docs.check_bad_input_files import check_bad_input_file_presence
-from mcdp_docs.html_links import read_references
 from mcdp_library import MCDPLibrary
 from mcdp_library.stdlib import get_test_librarian
-from mcdp_utils_misc import expand_all
-from mcdp_utils_misc import locate_files, get_md5
+from mcdp_utils_misc import expand_all, locate_files, get_md5
 import os
 import tempfile
 

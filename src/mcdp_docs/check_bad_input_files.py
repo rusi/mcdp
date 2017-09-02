@@ -3,8 +3,6 @@ from collections import defaultdict
 import os
 from compmake.utils.friendly_path_imp import friendly_path
 from mcdp_report.gg_utils import check_not_lfs_pointer
-from contracts.utils import check_isinstance
-import yaml
 
 def collect_by_extension(d):
     fs = locate_files(d, '*')
@@ -18,7 +16,7 @@ def collect_by_extension(d):
     
     return ext2filename
 
-from mcdp import logger
+
 
 def check_bad_input_file_presence(d):
 
@@ -30,10 +28,9 @@ def check_bad_input_file_presence(d):
         x = ext if  ext else '(no ext)'
             
         s += '\n %3d  %10s  files' % ( len(ext2filenames[ext]), x)
-#         
-#         if len(ext) > 4:
-#             logger.warn(ext2filenames[ext])
-    logger.info(s)
+#     from mcdp import logger
+#     logger.info(s)
+    
     no_forbidden(ext2filenames)
     check_lfs_checkout(ext2filenames)
     

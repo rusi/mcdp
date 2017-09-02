@@ -30,7 +30,7 @@ def png_from_pdf(pdf_data, density):
         ]
         shave = True
         if shave:
-            warnings.warn('Using shave to fix some bug in imagemagic')
+#             warnings.warn('Using shave to fix some bug in imagemagic')
             cmd += ['-shave', '1']
         cmd += ['-strip']
         cmd += [out]

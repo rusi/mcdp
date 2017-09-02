@@ -86,7 +86,7 @@ def make_figure_from_figureid_attr(soup):
             outside['style'] = towrap['figure-style']
         if towrap.has_attr('figure-class'):
             for k in towrap['figure-class'].split(' '):
-                logger.debug('figure-class: %s' % k)
+#                 logger.debug('figure-class: %s' % k)
                 add_class(towrap, k)
                 ## XXX but not to figure itself?
                 add_class(fig, k)

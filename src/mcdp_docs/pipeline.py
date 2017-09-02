@@ -19,6 +19,7 @@ from .make_console_pre import mark_console_pres
 from .make_figures import make_figure_from_figureid_attr
 from .prerender_math import escape_for_mathjax_back, escape_for_mathjax
 from .videos import make_videos
+from getpass import getuser
 
 
 __all__ = [
@@ -175,12 +176,17 @@ def render_complete(library, s, raise_errors, realpath, generate_pdf=False,
     
     if check_refs:    
         check_if_any_href_is_invalid(soup)
-            
-    run_lessc(soup)
+        
+    if getuser() == 'andrea':
+        run_lessc(soup)
     fix_validation_problems(soup)
+    
+    syntax_highlight(soup)
     
     s = to_html_stripping_fragment(soup)
     s = replace_macros(s)    
+    
+    
     return s
 
 def get_document_properties(soup):

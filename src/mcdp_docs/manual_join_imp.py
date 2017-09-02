@@ -54,8 +54,8 @@ def manual_join(template, files_contents,
         hook_before_toc if not None is called with hook_before_toc(soup=soup)
         just before generating the toc
     """
-    logger.debug('remove_selectors: %s' % remove_selectors)
-    logger.debug('remove: %s' % remove)
+#     logger.debug('remove_selectors: %s' % remove_selectors)
+#     logger.debug('remove: %s' % remove)
 
     template0 = template
     template = replace_macros(template)
@@ -95,7 +95,7 @@ def manual_join(template, files_contents,
     body = d.find('body')
     add_comments = False
     for docname, content in basename2soup.items():
-        logger.debug('docname %r -> %s KB' % (docname, len(data) / 1024))
+#         logger.debug('docname %r -> %s KB' % (docname, len(data) / 1024))
         from mcdp_docs.latex.latex_preprocess import assert_not_inside
         assert_not_inside(data, 'DOCTYPE')
         if add_comments:
@@ -254,7 +254,7 @@ def do_bib(soup, bibhere):
         c = id2cite[ID]
         # remove it from parent
         c.extract()
-        logger.debug('Extracting cite for %r: %s' % (ID, c))
+#         logger.debug('Extracting cite for %r: %s' % (ID, c))
         # add to bibliography
         bibhere.append(c)
 
