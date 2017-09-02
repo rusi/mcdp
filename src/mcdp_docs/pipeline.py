@@ -181,7 +181,7 @@ def render_complete(library, s, raise_errors, realpath, generate_pdf=False,
         run_lessc(soup)
     fix_validation_problems(soup)
     
-    syntax_highlight(soup)
+#     syntax_highlight(soup)
     
     s = to_html_stripping_fragment(soup)
     s = replace_macros(s)    
