@@ -18,7 +18,7 @@ def embed_css_files(soup):
     
     
 if __name__ == '__main__':
-    sys.stderr.write('Loading from stdin...\n')
+    logger.info('Loading from stdin...\n')
     
         
     contents = sys.stdin.read()
@@ -28,9 +28,9 @@ if __name__ == '__main__':
     
     if len(sys.argv) >= 2:
         fn = sys.argv[1]
-        sys.stderr.write('Writing to %s' % fn)
+        logger.info('Writing to %s' % fn)
         with open(fn, 'w') as f:
             f.write(contents2)
     else:
-        sys.stderr.write('Writing to stdout')
+        logger.info('Writing to stdout')
         sys.stdout.write(contents2)

@@ -1,12 +1,13 @@
 from collections import namedtuple
-from contracts.utils import raise_desc
+from contracts.utils import raise_desc, raise_wrapped
 import json
 import urllib2
 
 from bs4.element import Tag, Comment
+from urllib2 import URLError
+from mcdp_utils_xml.note_errors_inline import note_error2
 
-
-def make_videos(soup):
+def make_videos(soup, raise_on_errors=False):
     """
         Looks for tags of the kind:
         
@@ -16,9 +17,9 @@ def make_videos(soup):
     """
     
     for o in soup.find_all('dtvideo'):
-        make_videos_(o)
+        make_videos_(o, raise_on_errors)
         
-def make_videos_(o):
+def make_videos_(o, raise_on_errors):
     if not 'src' in o.attrs:
         msg = 'The video does not have a "src" attribute.'
         raise_desc(ValueError, msg, element=str(o))
@@ -35,7 +36,14 @@ def make_videos_(o):
 #         class="embed-responsive-item" 
 #         frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen="">
     
-    vimeo_info = get_vimeo_info(vimeo_id)    
+    try:
+        vimeo_info = get_vimeo_info(vimeo_id)
+    except VimeoInfoException as e:
+        if raise_on_errors:
+            raise
+        else:
+            note_error2(o, 'Resource error', str(e))
+            return 
     
     
     d = Tag(name='div')
@@ -77,7 +85,6 @@ def make_videos_(o):
     C = Tag(name='div')
     C.attrs['class'] = ONLY_DEADTREE
     if True:
-        
         img = Tag(name='img')
         img.attrs['class'] = 'video-vimeo-thumbnail-deadtree'
         img.attrs['src'] = vimeo_info.thumbnail_large
@@ -92,10 +99,17 @@ def make_videos_(o):
     
 VimeoInfo = namedtuple('VimeoInfo', 'title thumbnail_large url')
 
+class VimeoInfoException(Exception):
+    pass
+
 def get_vimeo_info(vimeo_id):
     url = 'http://vimeo.com/api/v2/video/%s.json' % vimeo_id
-
-    response = urllib2.urlopen(url) 
+    try:
+        response = urllib2.urlopen(url)
+    except URLError as e:
+        msg = 'Cannot open URL'
+        raise_wrapped(VimeoInfoException, e, msg) 
+         
     data = response.read()
     #logger.debug(data)
     

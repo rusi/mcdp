@@ -1,4 +1,5 @@
 from mcdp import logger
+from contracts.utils import raise_wrapped
 
 try:
     import pygments  # @UnusedImport
@@ -37,16 +38,25 @@ def syntax_highlighting(soup):
     from pygments import highlight
     from pygments.formatters import HtmlFormatter  # @UnresolvedImport
     
-    languages = [
-        ('markdown', is_markdown, get_lexer_by_name('markdown', stripall=True)),
-        ('python', is_python, get_lexer_by_name('python', stripall=True)),
-        ('xml', is_xml, get_lexer_by_name('xml', stripall=True)),
-        ('yaml', is_yaml,get_lexer_by_name('yaml', stripall=True)),
-        ('cmake', is_cmake, get_lexer_by_name('cmake', stripall=True)),
-        ('bash', is_bash, get_lexer_by_name('bash', stripall=True)),
-        ('latex', is_latex, get_lexer_by_name('latex', stripall=True)),
-    ]
-    
+    try:
+        languages = [
+            ('markdown', is_markdown, get_lexer_by_name('markdown', stripall=True)),
+            ('python', is_python, get_lexer_by_name('python', stripall=True)),
+            ('xml', is_xml, get_lexer_by_name('xml', stripall=True)),
+            ('yaml', is_yaml,get_lexer_by_name('yaml', stripall=True)),
+            ('cmake', is_cmake, get_lexer_by_name('cmake', stripall=True)),
+            ('bash', is_bash, get_lexer_by_name('bash', stripall=True)),
+            ('latex', is_latex, get_lexer_by_name('latex', stripall=True)),
+        ]
+
+    except Exception as e:
+        msg = 'Could not import Pygments lexers.'
+        msg += '\n Try: '
+        msg += '\n    pip install pygments pygments_markdown_lexer'
+        msg += '\n'
+        msg += '\nOriginal error: %s' % str(e)
+        raise Exception(msg)
+        
     formatter = HtmlFormatter(linenos=False, cssclass="source")
 
     styles = formatter.get_style_defs(arg='')
