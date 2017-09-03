@@ -20,6 +20,7 @@ from .make_figures import make_figure_from_figureid_attr
 from .prerender_math import escape_for_mathjax_back, escape_for_mathjax
 from .videos import make_videos
 from getpass import getuser
+from mcdp_docs.syntax_highlight import syntax_highlighting, strip_pre
 
 
 __all__ = [
@@ -181,7 +182,8 @@ def render_complete(library, s, raise_errors, realpath, generate_pdf=False,
         run_lessc(soup)
     fix_validation_problems(soup)
     
-#     syntax_highlight(soup)
+    strip_pre(soup)
+    syntax_highlighting(soup)
     
     s = to_html_stripping_fragment(soup)
     s = replace_macros(s)    

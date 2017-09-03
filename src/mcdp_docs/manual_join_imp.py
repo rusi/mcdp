@@ -861,20 +861,26 @@ def do_remove_stuff(soup, remove_selectors, remove):
 
 def generate_and_add_toc(soup):
     logger.info('adding toc')
-    body= soup.find('body')
+    body = soup.find('body')
     toc = generate_toc(body)
     
 #     logger.info('TOC:\n' + str(toc))
     toc_ul = bs(toc).ul
-    toc_ul.extract()
-    assert toc_ul.name == 'ul'
-    toc_ul['class'] = 'toc'
-    toc_ul['id'] = 'main_toc'
-    toc_selector = 'div#toc'
-    tocs = list(body.select(toc_selector))
-    if not tocs:
-        msg = 'Cannot find any element of type %r to put TOC inside.' % toc_selector
-        logger.warning(msg)
+    if toc_ul is None:
+        # empty TOC
+        msg = 'Could not find toc'
+        logger.warning(msg) 
+        # XXX
     else:
-        toc_place = tocs[0]
-        toc_place.replaceWith(toc_ul)
+        toc_ul.extract()
+        assert toc_ul.name == 'ul'
+        toc_ul['class'] = 'toc'
+        toc_ul['id'] = 'main_toc'
+        toc_selector = 'div#toc'
+        tocs = list(body.select(toc_selector))
+        if not tocs:
+            msg = 'Cannot find any element of type %r to put TOC inside.' % toc_selector
+            logger.warning(msg)
+        else:
+            toc_place = tocs[0]
+            toc_place.replaceWith(toc_ul)
