@@ -52,7 +52,7 @@ def get_manual_css_frag():
 
 @contract(files_contents='list( tuple( tuple(str,str), str) )', returns='str',
           remove_selectors='None|seq(str)')
-def manual_join(template, files_contents, bibfile, stylesheet, remove=None, extra_css=None,
+def manual_join(template, files_contents, bibfile, stylesheet, embed_css=True, remove=None, extra_css=None,
                 remove_selectors=None,
                 hook_before_toc=None):
     """
@@ -79,12 +79,20 @@ def manual_join(template, files_contents, bibfile, stylesheet, remove=None, extr
         head.append(x.__copy__())
 
     if stylesheet is not None:
-        link = Tag(name='link')
-        link['rel'] = 'stylesheet'
-        link['type'] = 'text/css'
         from mcdp_report.html import get_css_filename
-        link['href'] = get_css_filename('compiled/%s' % stylesheet)
-        head.append(link)
+        href = get_css_filename('compiled/%s' % stylesheet)
+        if embed_css:
+            data = open(href).read()
+            style = Tag(name='style')
+            style.attrs['type'] = 'text/css'
+            style.string = data
+            head.append(style)
+        else:
+            link = Tag(name='link')
+            link['rel'] = 'stylesheet'
+            link['type'] = 'text/css'
+            link['href'] = href
+            head.append(link)
 
     basename2soup = OrderedDict()
     for (_libname, docname), data in files_contents:
